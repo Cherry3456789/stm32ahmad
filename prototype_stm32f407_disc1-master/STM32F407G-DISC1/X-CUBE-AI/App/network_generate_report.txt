@@ -1,0 +1,169 @@
+ST Edge AI Core v2.2.0-20266 2adc00962
+Created date          : 2026-03-30 14:27:18
+Parameters            : generate --target stm32f4 --name network -m C:/Users/Ahmad/Downloads/MNIST_model_no_optimizations.tflite --compression none --verbosity 1 --workspace C:/Users/Ahmad/AppData/Local/Temp/mxAI_workspace5393212059090017163144047840742718 --output C:/Users/Ahmad/.stm32cubemx/network_output
+
+Exec/report summary (generate)
+------------------------------------------------------------------------------------------------------------
+model file         :   C:\Users\Ahmad\Downloads\MNIST_model_no_optimizations.tflite                         
+type               :   tflite                                                                               
+c_name             :   network                                                                              
+compression        :   none                                                                                 
+options            :   allocate-inputs, allocate-outputs                                                    
+optimization       :   balanced                                                                             
+target/series      :   stm32f4                                                                              
+workspace dir      :   C:\Users\Ahmad\AppData\Local\Temp\mxAI_workspace5393212059090017163144047840742718   
+output dir         :   C:\Users\Ahmad\.stm32cubemx\network_output                                           
+model_fmt          :   float                                                                                
+model_name         :   MNIST_model_no_optimizations                                                         
+model_hash         :   0x499c3b890b11183bc07e484b6740957d                                                   
+params #           :   20,410 items (79.73 KiB)                                                             
+------------------------------------------------------------------------------------------------------------
+input 1/1          :   'conv2d_1_input', f32(1x28x28x1), 3.06 KBytes, activations                           
+output 1/1         :   'nl_4', f32(1x10), 40 Bytes, activations                                             
+macc               :   101,572                                                                              
+weights (ro)       :   81,640 B (79.73 KiB) (1 segment)                                                     
+activations (rw)   :   12,004 B (11.72 KiB) (1 segment) *                                                   
+ram (total)        :   12,004 B (11.72 KiB) = 12,004 + 0 + 0                                                
+------------------------------------------------------------------------------------------------------------
+(*) 'input'/'output' buffers are allocated in the activations buffer
+
+Model name - MNIST_model_no_optimizations
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+m_id   layer (type,original)                            oshape                 param/size          macc                     connected to   | c_size          c_macc             c_type                
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+0      conv2d_1_input (Input, )                         [b:1,h:28,w:28,c:1]                                                                |                                    
+       conv2d_0 (Conv2D, CONV_2D)                       [b:1,h:26,w:26,c:12]   120/480           73,020                   conv2d_1_input   | -480(-100.0%)   -73,020(-100.0%)   
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+1      pool_1 (Pool, MAX_POOL_2D)                       [b:1,h:13,w:13,c:12]                      8,112                         conv2d_0   | +480(+100.0%)   +73,020(+900.1%)   Conv2D_[0]            
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+2      reshape_2 (Reshape, RESHAPE)                     [b:1,c:2028]                                                              pool_1   |                                    
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+3      sequential_1_dense..e_2_MatMul (Placeholder, )   [b:10,c:2028]          20,280/81,120                                               | +40(+0.0%)      +20,290(+100.0%)   Dense_[1]             
+       unknown_2 (Placeholder, )                        [b:10]                 10/40                                                       | -40(-100.0%)                       
+       gemm_3 (Gemm, FULLY_CONNECTED)                   [b:1,c:10]                               20,290                        reshape_2   |                 -20,290(-100.0%)   
+                                                                                                          sequential_1_dense..e_2_MatMul   | 
+                                                                                                                               unknown_2   | 
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+4      nl_4 (Nonlinearity, SOFTMAX)                     [b:1,c:10]                                  150                           gemm_3   |                                    Nonlinearity_[o][2]   
+------ ------------------------------------------------ ---------------------- --------------- -------- -------------------------------- --- --------------- ------------------ --------------------- 
+model/c-model: macc=101,572/101,572  weights=81,640/81,640  activations=--/12,004 io=--/0
+
+
+
+Generated C-graph summary
+------------------------------------------------------------------------------------------------------------------------
+model name            : MNIST_model_no_optimizations
+c-name                : network
+c-node #              : 3
+c-array #             : 10
+activations size      : 12004 (1 segment)
+weights size          : 81640 (1 segment)
+macc                  : 101572
+inputs                : ['conv2d_1_input_output']
+outputs               : ['nl_4_output']
+
+C-Arrays (10)
+------ ----------------------- ------------- ------------------------- ------------- --------- 
+c_id   name (*_array)          item/size     domain/mem-pool           c-type        comment   
+------ ----------------------- ------------- ------------------------- ------------- --------- 
+0      conv2d_0_bias           12/48         weights/weights           const float             
+1      conv2d_0_output         2028/8112     activations/**default**   float                   
+2      conv2d_0_scratch0       9/36          activations/**default**   float                   
+3      conv2d_0_scratch1       624/2496      activations/**default**   float                   
+4      conv2d_0_weights        108/432       weights/weights           const float             
+5      conv2d_1_input_output   784/3136      activations/**default**   float         /input    
+6      gemm_3_bias             10/40         weights/weights           const float             
+7      gemm_3_output           10/40         activations/**default**   float                   
+8      gemm_3_weights          20280/81120   weights/weights           const float             
+9      nl_4_output             10/40         activations/**default**   float         /output   
+------ ----------------------- ------------- ------------------------- ------------- --------- 
+
+C-Layers (3)
+------ ---------------- ---- --------------- ------- ------- -------------------------- --------------------- 
+c_id   name (*_layer)   id   layer_type      macc    rom     tensors                    shape (array id)      
+------ ---------------- ---- --------------- ------- ------- -------------------------- --------------------- 
+0      conv2d_0         1    Conv2D          81132   480     I: conv2d_1_input_output   f32(1x28x28x1) (5)    
+                                                             S: conv2d_0_scratch0                             
+                                                             S: conv2d_0_scratch1                             
+                                                             W: conv2d_0_weights        f32(12x3x3x1) (4)     
+                                                             W: conv2d_0_bias           f32(12) (0)           
+                                                             O: conv2d_0_output         f32(1x13x13x12) (1)   
+------ ---------------- ---- --------------- ------- ------- -------------------------- --------------------- 
+1      gemm_3           3    Dense           20290   81160   I: conv2d_0_output         f32(1x13x13x12) (1)   
+                                                             W: gemm_3_weights          f32(10x2028) (8)      
+                                                             W: gemm_3_bias             f32(10) (6)           
+                                                             O: gemm_3_output           f32(1x10) (7)         
+------ ---------------- ---- --------------- ------- ------- -------------------------- --------------------- 
+2      nl_4             4    Nonlinearity    150     0       I: gemm_3_output           f32(1x10) (7)         
+                                                             O: nl_4_output             f32(1x10) (9)         
+------ ---------------- ---- --------------- ------- ------- -------------------------- --------------------- 
+
+
+
+Number of operations per c-layer
+------- ------ --------------------- --------- -------------- 
+c_id    m_id   name (type)                 #op           type 
+------- ------ --------------------- --------- -------------- 
+0       1      conv2d_0 (Conv2D)        81,132   smul_f32_f32 
+1       3      gemm_3 (Dense)           20,290   smul_f32_f32 
+2       4      nl_4 (Nonlinearity)         150     op_f32_f32 
+------- ------ --------------------- --------- -------------- 
+total                                  101,572 
+
+Number of operation types
+---------------- --------- ----------- 
+operation type           #           % 
+---------------- --------- ----------- 
+smul_f32_f32       101,422       99.9% 
+op_f32_f32             150        0.1% 
+
+Complexity report (model)
+------ ------------------------------------------ ------------------------- ------------------------- ------ 
+m_id   name                                       c_macc                    c_rom                     c_id   
+------ ------------------------------------------ ------------------------- ------------------------- ------ 
+1      pool_1                                     ||||||||||||||||  79.9%   |                  0.6%   [0]    
+3      sequential_1_dense_2_MatMulS..e_2_MatMul   ||||              20.0%   ||||||||||||||||  99.4%   [1]    
+4      nl_4                                       |                  0.1%   |                  0.0%   [2]    
+------ ------------------------------------------ ------------------------- ------------------------- ------ 
+macc=101,572 weights=81,640 act=12,004 ram_io=0
+ 
+ Requested memory size by section - "stm32f4" target
+ ------------------------------ -------- -------- ------- -------- 
+ module                             text   rodata    data      bss 
+ ------------------------------ -------- -------- ------- -------- 
+ NetworkRuntime1020_CM4_GCC.a     10,384        0       0        0 
+ network.o                           496       24   1,396      156 
+ network_data.o                       48       16      88        0 
+ lib (toolchain)*                    614       24       0        0 
+ ------------------------------ -------- -------- ------- -------- 
+ RT total**                       11,542       64   1,484      156 
+ ------------------------------ -------- -------- ------- -------- 
+ weights                               0   81,640       0        0 
+ activations                           0        0       0   12,004 
+ io                                    0        0       0        0 
+ ------------------------------ -------- -------- ------- -------- 
+ TOTAL                            11,542   81,704   1,484   12,160 
+ ------------------------------ -------- -------- ------- -------- 
+ *  toolchain objects (libm/libgcc*)
+ ** RT AI runtime objects (kernels+infrastructure)
+  
+  Summary - "stm32f4" target
+  ---------------------------------------------------
+               FLASH (ro)      %*   RAM (rw)       % 
+  ---------------------------------------------------
+  RT total         13,090   13.8%      1,640   12.0% 
+  ---------------------------------------------------
+  TOTAL            94,730             13,644         
+  ---------------------------------------------------
+  *  rt/total
+
+
+Generated files (7)
+------------------------------------------------------------------ 
+C:\Users\Ahmad\.stm32cubemx\network_output\network_data_params.h   
+C:\Users\Ahmad\.stm32cubemx\network_output\network_data_params.c   
+C:\Users\Ahmad\.stm32cubemx\network_output\network_data.h          
+C:\Users\Ahmad\.stm32cubemx\network_output\network_data.c          
+C:\Users\Ahmad\.stm32cubemx\network_output\network_config.h        
+C:\Users\Ahmad\.stm32cubemx\network_output\network.h               
+C:\Users\Ahmad\.stm32cubemx\network_output\network.c               

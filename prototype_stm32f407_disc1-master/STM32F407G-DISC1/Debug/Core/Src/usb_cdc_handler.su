@@ -1,0 +1,8 @@
+../Core/Src/usb_cdc_handler.cpp:30:6:void CDC_Proto_Init()	8	static
+../Core/Src/usb_cdc_handler.cpp:42:14:CDC_Status_t CDC_SendDebugString(const char*)	24	static
+../Core/Src/usb_cdc_handler.cpp:62:14:)	16	static
+../Core/Src/usb_cdc_handler.cpp:75:14:CDC_Status_t CDC_SendHandshake()	24	static
+../Core/Src/usb_cdc_handler.cpp:106:14:CDC_Status_t CDC_PullChunk(uint32_t, uint16_t, uint8_t*, uint16_t*)	40	static
+../Core/Src/usb_cdc_handler.cpp:230:6:void CDC_Proto_RxCallback(const uint8_t*, uint32_t)	32	static
+../Core/Src/usb_cdc_handler.cpp:299:6:void CDC_JumpToBootloader()	24	static,ignoring_inline_asm
+../Core/Src/usb_cdc_handler.cpp:323:6:void CDC_Proto_CommandCallback(const char*)	16	static
