@@ -1,0 +1,60 @@
+# Виртуальное окружение
+.venv/
+venv/
+env/
+ENV/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# PlatformIO
+.pio/
+.pio-build/
+.pio/libdeps/
+.pio/build/
+platformio.ini.old
+
+# IDE и редакторы
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Логи и временные файлы
+*.log
+*.tmp
+*.temp
+
+# Скомпилированные файлы
+*.pyc
+*.pyd
+
+# Файлы с секретами/паролями
+.env
+*.key
+*.pem
+
+# Результаты сборки
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# Тестовые данные (если генерируются)
+testgen/output/
+testgen/*.bin
+testgen/*.hex
+
+# Файлы загрузки/прошивки
+*.hex
+*.bin
+*.elf

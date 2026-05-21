@@ -6,8 +6,6 @@ import subprocess
 import time
 from pathlib import Path
 
-import serial
-
 START = 0xAA
 MSG_HELLO = 0x01
 MSG_TEST_META = 0x02
@@ -32,7 +30,7 @@ def pack(msg_t: int, seq: int, payload: bytes = b"") -> bytes:
     return bytes([START]) + hdr + payload + struct.pack("<H", crc16(hdr + payload))
 
 
-def read_frame(s: serial.Serial, timeout_s: float = 2.0):
+def read_frame(s, timeout_s: float = 2.0):
     t0 = time.time()
     while time.time() - t0 < timeout_s:
         b = s.read(1)
@@ -64,6 +62,8 @@ def flash(fw_dir="mik32_tinyml_firmware"):
 
 
 def run_tests(port: str, test_file: str, out_json: str, baud=115200):
+    import serial
+    
     b = Path(test_file).read_bytes()
     if b[:4] != b"MKT1":
         raise RuntimeError("Bad test format")
